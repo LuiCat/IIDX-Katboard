@@ -34,3 +34,4 @@ An exhaustive tutorial on all setup steps (Chinese only):
 ## Credits
 
 - Matthew Heironimus's Arduino Joystick Library, licensed in LGPLv3: [MHeironimus/ArduinoJoystickLibrary](https://github.com/MHeironimus/ArduinoJoystickLibrary)
+- Tester: RVG, exhaustive feedbacks on the tutorial
