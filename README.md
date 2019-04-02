@@ -19,7 +19,7 @@ Simple IIDX controller with full-acrylic casing
 - Optional 9 keys or 10 keys before manufacturing
 - Optional 1P or 2P layout during assembly
 - All 10 button-lights working
-- Low damping turntable; no designed ways to adjust the resistance, but by pressing the circlip would do
+- Low friction turntable; no designed ways to adjust the friction, but adjusting the tightness of the circlip would work
 ![](images/3.png)
 - Opened bottom and sides; maintainence of switches without opening up the casing
 ![](images/4.png)
