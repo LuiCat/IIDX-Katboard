@@ -8,10 +8,9 @@ Simple IIDX controller with full-acrylic casing
 
 ## Specifications
 
-Height: 6~7cm
-Width: 20cm
-Length: 46cm
-Turntable diameter: 16cm
+| Height | Width | Length | Turntable diameter |
+| :--: | :--: | :--: | :--: |
+| 6~7cm | 20cm | 46cm | 16cm |
 
 ## Features
 
