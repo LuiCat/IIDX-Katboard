@@ -43,7 +43,7 @@ const int sensivity_arrow = 20; // pulse/keypress
 
 const int pins_tt[] = {2, 3};
 const int keys_tt[] = {KEY_DOWN_ARROW, KEY_UP_ARROW};
-const int key_hold_tt = '4';
+const int key_hold_tt = '`';
 int pos_tt = 0;
 int state_tt = 0;
 
@@ -114,11 +114,11 @@ void setup() {
 #if ENABLE_KEYBOARD
   Keyboard.begin();
 #endif
-
-  //Serial.begin(9600);
 }
 
 void loop() {
+  delay(1);
+  
   unsigned long curr_time = micros();
   int state;
   
@@ -145,15 +145,10 @@ void loop() {
     if (abs(curr_pos_tt - last_pos_tt) > (time_tt - last_time_tt) * 1e-6f * min_speed) {
       state = (curr_pos_tt - last_pos_tt > 0 ? 1 : -1);
     }
-    //Serial.print(state * min_speed);
-    //Serial.print(" ");
-    //Serial.println((pos_tt - last_pos_tt) * 1e6f / (time_tt - last_time_tt));
     last_pos_tt = curr_pos_tt;
     last_time_tt = time_tt;
   } else if (state_tt != 0 && (time_tt - last_time_tt) > max_interval) {
     state = 0;
-    //Serial.print(state * min_speed);
-    //Serial.println(" 0");
   }
   if (state_tt != state) {
     set_button_tt(state);
@@ -162,5 +157,4 @@ void loop() {
   set_axis_tt();
   
   Joystick.sendState();
-  delay(1);
 }
