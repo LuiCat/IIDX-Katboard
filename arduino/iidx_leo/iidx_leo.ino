@@ -9,6 +9,7 @@ const int btn_count = 10;
 const int btn_pins[] = {4, 5, 6, 7, 8, 9, 10, SCK, MISO, MOSI};
 const int led_pins[] = {A0, A1, A2, A3, A4, A5, 1, 11, 12, 13};
 const int keys[] = {'d', '1', 'f', '2', 'j', '3', 'k', KEY_ESC, KEY_RETURN, KEY_BACKSPACE};
+const int btns[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 int states_raw[btn_count] = {};
 int states[btn_count] = {};
@@ -23,13 +24,13 @@ void set_button(int i, int state) {
 #if ENABLE_KEYBOARD
     Keyboard.press(keys[i]);
 #endif
-    Joystick.buttons |= (uint16_t)1 << i;
+    Joystick.buttons |= (uint16_t)1 << btns[i];
     digitalWrite(led_pins[i], LOW);
   } else {
 #if ENABLE_KEYBOARD
     Keyboard.release(keys[i]);
 #endif
-    Joystick.buttons &= ~((uint16_t)1 << i);
+    Joystick.buttons &= ~((uint16_t)1 << btns[i]);
     digitalWrite(led_pins[i], HIGH);
   }
 }
@@ -44,6 +45,7 @@ const int sensivity_arrow = 20; // pulse/keypress
 const int pins_tt[] = {2, 3};
 const int keys_tt[] = {KEY_DOWN_ARROW, KEY_UP_ARROW};
 const int key_hold_tt = '`';
+const int btn_hold_tt[] = {10, 11};
 int pos_tt = 0;
 int state_tt = 0;
 
@@ -62,13 +64,13 @@ void set_button_tt(int state) {
 #if ENABLE_KEYBOARD
     Keyboard.release(key_hold_tt);
 #endif
-    Joystick.buttons &= ~((uint16_t)1 << 10);
+    Joystick.buttons &= ~((uint16_t)1 << (state_tt == 1 ? btn_hold_tt[0] : btn_hold_tt[1]));
   }
   if (state != 0) {
 #if ENABLE_KEYBOARD
     Keyboard.press(key_hold_tt);
 #endif
-    Joystick.buttons |= (uint16_t)1 << 10;
+    Joystick.buttons |= (uint16_t)1 << (state == 1 ? btn_hold_tt[0] : btn_hold_tt[1]);
   }
   state_tt = state;
 }
@@ -135,20 +137,25 @@ void loop() {
 
   static int last_pos_tt = pos_tt;
   static unsigned long last_time_tt = micros();
-
+  static int accum_dpos_tt = 0;
+  
   int curr_pos_tt = pos_tt;
+  int dpos_tt = curr_pos_tt - last_pos_tt;
   unsigned long time_tt = curr_time;
   
   state = state_tt;
-  if (last_pos_tt != curr_pos_tt) {
+  if (dpos_tt != 0) {
     state = 0;
-    if (abs(curr_pos_tt - last_pos_tt) > (time_tt - last_time_tt) * 1e-6f * min_speed) {
+    if ((accum_dpos_tt > 0) != (dpos_tt > 0)) accum_dpos_tt = 0;
+    accum_dpos_tt += dpos_tt;
+    if (abs(accum_dpos_tt) > 2 && abs(curr_pos_tt - last_pos_tt) > (time_tt - last_time_tt) * 1e-6f * min_speed) {
       state = (curr_pos_tt - last_pos_tt > 0 ? 1 : -1);
     }
     last_pos_tt = curr_pos_tt;
     last_time_tt = time_tt;
   } else if (state_tt != 0 && (time_tt - last_time_tt) > max_interval) {
     state = 0;
+    accum_dpos_tt = 0;
   }
   if (state_tt != state) {
     set_button_tt(state);
