@@ -43,16 +43,12 @@
 //================================================================================
 //  Joystick (Gamepad)
 
-class Joystick_
+struct Joystick_
 {
+  uint16_t  buttons;
+  uint8_t  xAxis;
 
-public:
- 
-	Joystick_();
-  int8_t   xAxis;
-  int8_t   yAxis;
-  uint32_t buttons;
-
+  Joystick_();
 	void sendState();
 };
 extern Joystick_ Joystick;
